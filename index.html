@@ -2,6 +2,15 @@
 <html lang="en">
 
 <head>
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "56de5bc083134345966f9b14c3a1d5eb"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+  <script>TrackJS.track('Testing TrackJS!');</script>
+                        
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -69,21 +78,21 @@
     </form>
 
     <section id="error-btns">
-      <button>Console Log</button>
-      <button>Console Error</button>
-      <button>Console Count</button>
-      <button>Console Warn</button>
-      <button>Console Assert</button>
-      <button>Console Clear</button>
-      <button>Console Dir</button>
-      <button>Console dirxml</button>
-      <button>Console Group Start</button>
-      <button>Console Group End</button>
-      <button>Console Table</button>
-      <button>Start Timer</button>
-      <button>End Timer</button>
-      <button>Console Trace</button>
-      <button>Trigger a Global Error</button>
+      <button onclick="consLog()">Console Log</button>
+      <button onclick="consErr()">Console Error</button>
+      <button onclick="consCnt()">Console Count</button>
+      <button onclick="consWarn()">Console Warn</button>
+      <button onclick="consAssert()">Console Assert</button>
+      <button onclick="consClear()">Console Clear</button>
+      <button onclick="consDir()">Console Dir</button>
+      <button onclick="consDirxml()">Console dirxml</button>
+      <button onclick="consGrStart()">Console Group Start</button>
+      <button onclick="consGrEnd()">Console Group End</button>
+      <button onclick="consTab()">Console Table</button>
+      <button onclick="consStartTimer()">Start Timer</button>
+      <button onclick="consEndTimer()">End Timer</button>
+      <button onclick="consTrace()">Console Trace</button>
+      <button onclick="consGlobalErr()">Trigger a Global Error</button>
     </section>
   </main>
 
@@ -95,13 +104,126 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      try {
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } 
+      catch (error) {
+        output.innerHTML = 'Error occurred';
+        console.error(error);
+      } 
+      finally {
+        console.log("evaluated");
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+    function consLog() {
+      console.log("Console Log");
+    }
+
+    function consErr() {
+      console.error("Console Error");
+    }
+
+    function consCnt() {
+      console.count("Console Count");
+    }
+
+    function consWarn() {
+      console.warn("Console warn");
+    }
+
+    function consAssert() {
+      try {
+        console.assert(1 + 1 == 11, "Sum is not 11");
+      } 
+      catch (error) {
+        console.error(error);
+      }
+    }
+
+    function consClear() {
+      console.clear();
+    }
+
+    function consDir() {
+      console.dir(window);
+    }
+
+    function consDirxml() {
+      console.dirxml(errorBtns[0]);
+    }
+
+    function consGrStart() {
+      console.group("Group start");
+    }
+
+    function consGrEnd() {
+      console.groupEnd();
+    }
+
+    function consTab() {
+      const data = [
+        { 
+          name: "Ben", 
+          class: "CSE 110", 
+          school: "UCSD" 
+        },
+        { 
+          name: "Bob", 
+          class: "CSE 112", 
+          school: "UCSD" 
+        },
+        { 
+          name: "Sam", 
+          class: "CSE 134B", 
+          school: "UCSD" 
+        }
+      ];
+      console.table(data);
+    }
+
+    function consStartTimer() {
+      console.time("Timer");
+    }
+
+    function consEndTimer() {
+      console.timeEnd("Timer");
+    }
+
+    function consTrace() {
+      const first = () => { second(); };
+      const second = () => { third(); };
+      const third = () => { fourth(); };
+      const fourth = () => { console.trace(); };
+      first();
+    }
+
+    class CustomErr extends Error {
+      constructor(message, code) {
+        super(message);
+        this.code = code;
+        this.name = 'CustomErr';
+      }
+    }
+
+    function consGlobalErr() {
+      const func = () => {throw new CustomErr("Something is wrong", 404);}
+
+      try {
+        func();
+      }
+      catch (err){
+        alert(err.message);
+        alert(err.code);
+        alert(err.name);
+      }
+    }
+
+    
   </script>
 </body>
 
